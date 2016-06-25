@@ -27,58 +27,67 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_EMAIL = "email";
 
-    private EditText editTextEmail;
-    private EditText editTextPassword;
+    private EditText etEmail;
+    private EditText etPassword;
+    private EditText etRepeatPassword;
 
-    private Button buttonRegister;
+    private Button btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextEmail= (EditText) findViewById(R.id.editTextEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        etRepeatPassword = (EditText) findViewById(R.id.etRepeatedPassword);
+        etEmail= (EditText) findViewById(R.id.etEmail);
 
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
 
-        buttonRegister.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
     }
 
     private void registerUser(){
-        final String password = editTextPassword.getText().toString().trim();
-        final String email = editTextEmail.getText().toString().trim();
+        final String password = etPassword.getText().toString().trim();
+        final String repeatPassword = etRepeatPassword.getText().toString().trim();
+        final String email = etEmail.getText().toString().trim();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(RegisterActivity.this,response,Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(RegisterActivity.this,error.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put(KEY_PASSWORD,password);
-                params.put(KEY_EMAIL, email);
-                return params;
-            }
+        if(password == "" || !repeatPassword.equals(password)) {
+            Toast.makeText(RegisterActivity.this,"Password incorrect",Toast.LENGTH_LONG).show();
+        } else {
 
-        };
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Toast.makeText(RegisterActivity.this, response, Toast.LENGTH_LONG).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(RegisterActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(KEY_PASSWORD, password);
+                    params.put(KEY_EMAIL, email);
+                    return params;
+                }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+        }
     }
 
     @Override
     public void onClick(View v) {
-        if(v == buttonRegister){
+        if(v == btnRegister){
+
             registerUser();
         }
     }

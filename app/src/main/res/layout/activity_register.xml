@@ -6,26 +6,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username" />
+        android:text="Email" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextUsername" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="email" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editTextEmail" />
+        android:id="@+id/etEmail" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,13 +25,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:password="true"
-        android:id="@+id/editTextPassword" />
+        android:id="@+id/etPassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:password="true"
+        android:text="Repeat password" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etRepeatedPassword" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
-        android:id="@+id/buttonRegister" />
+        android:id="@+id/btnRegister" />
 
 
 </LinearLayout>
