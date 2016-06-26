@@ -16,7 +16,7 @@ public class Config {
 
     //Keys for Sharedpreferences
     //This would be the name of our shared preferences
-    public static final String SHARED_PREF_NAME = "myloginapp";
+    public static final String SHARED_PREF_NAME = "locatemesession";
 
     //This would be used to store the session of current logged in user
     public static final String ID_SHARED_PREF = "id";

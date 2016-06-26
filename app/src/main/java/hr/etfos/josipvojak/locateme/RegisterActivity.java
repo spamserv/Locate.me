@@ -1,5 +1,6 @@
 package hr.etfos.josipvojak.locateme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -61,6 +62,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onResponse(String response) {
                             Toast.makeText(RegisterActivity.this, response, Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(intent);
                         }
                     },
                     new Response.ErrorListener() {
@@ -87,7 +91,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if(v == btnRegister){
-
             registerUser();
         }
     }

@@ -30,12 +30,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:password="true"
         android:text="Repeat password" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:password="true"
         android:id="@+id/etRepeatedPassword" />
 
     <Button

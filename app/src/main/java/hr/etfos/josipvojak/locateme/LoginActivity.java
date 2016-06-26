@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,6 +28,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etEmail;
     private EditText etPassword;
     private AppCompatButton btnLogin;
+    private TextView tvLinkSignup;
 
     //boolean variable to check user is logged in or not
     //initially it is false
@@ -42,9 +44,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etPassword = (EditText) findViewById(R.id.etPassword);
 
         btnLogin = (AppCompatButton) findViewById(R.id.btnLogin);
+        tvLinkSignup = (TextView) findViewById(R.id.tvLinkSignup);
 
         //Adding click listener
         btnLogin.setOnClickListener(this);
+        tvLinkSignup.setOnClickListener(this);
     }
 
     @Override
@@ -127,6 +131,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Calling the login function
         if (v == btnLogin) {
             login();
+        } else if (v == tvLinkSignup) {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         }
     }
 }
