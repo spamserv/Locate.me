@@ -13,6 +13,7 @@ public class Config {
 
     //If server response is equal to this that means login is successful
     public static final String LOGIN_SUCCESS = "success";
+    public static final String FAILURE = "failure";
 
     //Keys for Sharedpreferences
     //This would be the name of our shared preferences

@@ -1,5 +1,6 @@
 package hr.etfos.josipvojak.locateme;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,28 +14,35 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IndexActivity extends AppCompatActivity {
 
-    private static final String REGISTER_URL = "http://locate-me.azurewebsites.net/search.php";
+    private static final String SEARCH_URL = "http://locate-me.azurewebsites.net/search.php";
 
     public static final String KEY_EMAIL = "email";
+    ListView lvUsers;
+    ArrayList<User> myUsers = new ArrayList<User>();;
+    UserAdapter myArrayAdapter;
     //Textview to show currently logged in user
     private TextView tvView;
 
@@ -53,6 +61,8 @@ public class IndexActivity extends AppCompatActivity {
 
         //Showing the current logged in email to textview
         tvView.setText("Current User: " + email);
+
+        lvUsers = (ListView) findViewById(R.id.lvUsers);
     }
 
     //Logout function
@@ -99,40 +109,58 @@ public class IndexActivity extends AppCompatActivity {
 
     }
 
-    private void search(String query) {
-        Intent intent = getIntent();
-        Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
 
+    private void search(String query) {
         final String email = query;
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Searching...");
+        pDialog.show();
+        Intent intent = getIntent();
+
 
         if (email == "") {
             Toast.makeText(IndexActivity.this, "You didn't enter any email.", Toast.LENGTH_LONG).show();
         } else {
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, REGISTER_URL, null,
-                    new Response.Listener<JSONObject>() {
+
+            //Creating a string request
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
+                    new Response.Listener<String>() {
                         @Override
-                        public void onResponse(JSONObject response) {
-                            Toast.makeText(IndexActivity.this, response.toString(), Toast.LENGTH_LONG).show();
-                            String email = response.toString();
+                        public void onResponse(String response) {
+                            if(!response.equalsIgnoreCase(Config.FAILURE)) {
+                                String email = response.toString();
+                                User user = new User(email);
+                                myUsers.add(user);
+                                myArrayAdapter = new UserAdapter(IndexActivity.this, myUsers);
+                                lvUsers.setAdapter(myArrayAdapter);
+                            }else{
+                                Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                            }
+                                pDialog.hide();
+
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            //You can handle error here if you want
                             Toast.makeText(IndexActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+
+                            pDialog.hide();
                         }
                     }) {
                 @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    //Adding parameters to request
                     params.put(KEY_EMAIL, email);
+
+                    //returning parameter
                     return params;
                 }
-
             };
-
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            requestQueue.add(jsonRequest);
+            requestQueue.add(stringRequest);
         }
     }
 
