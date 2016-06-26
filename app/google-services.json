@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1081302882025",
+    "firebase_url": "https://locate-me-6b421.firebaseio.com",
+    "project_id": "locate-me-6b421",
+    "storage_bucket": "locate-me-6b421.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081302882025:android:f6105e926ebf41c0",
+        "android_client_info": {
+          "package_name": "hr.etfos.josipvojak.locateme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081302882025-b8ds07upos6ekdjf4bik6nvkdhq7vdks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6al_BVPd_x32eG7pjlWMJUgywqz9nFh0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

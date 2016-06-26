@@ -18,13 +18,14 @@
             android:textAlignment="center"/>
         <Button
             android:id="@+id/btnAccept"
-            android:layout_width="50dp"
+            android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_margin="2dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Accept"/>
+            android:text="Accept"
+            android:focusable="false"/>
     </RelativeLayout>
 
 </RelativeLayout>

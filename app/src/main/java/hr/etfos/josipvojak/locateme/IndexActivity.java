@@ -1,5 +1,6 @@
 package hr.etfos.josipvojak.locateme;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +28,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IndexActivity extends AppCompatActivity {
+public class IndexActivity extends AppCompatActivity{
 
     private static final String SEARCH_URL = "http://locate-me.azurewebsites.net/search.php";
 
@@ -51,10 +57,23 @@ public class IndexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+        Integer resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode == ConnectionResult.SUCCESS) {
+        //Do what you want
+                } else {
+                    Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+                    if (dialog != null) {
+        //This dialog will help the user update to the latest GooglePlayServices
+                        dialog.show();
+                    }
+                }
+        init();
+    }
 
+    private void init() {
         //Initializing textview
         tvView = (TextView) findViewById(R.id.tvView);
-
+        Log.d("Primjer","primjer-loga");
         //Fetching email from shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
@@ -63,6 +82,14 @@ public class IndexActivity extends AppCompatActivity {
         tvView.setText("Current User: " + email);
 
         lvUsers = (ListView) findViewById(R.id.lvUsers);
+        this.lvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User user = (User) myArrayAdapter.getItem(position);
+                Toast.makeText(IndexActivity.this, "You just sent a request to "+user.getEmail()+"!", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     //Logout function
@@ -200,4 +227,5 @@ public class IndexActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
