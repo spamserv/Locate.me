@@ -25,25 +25,31 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //It is optional
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification Message Body: " + remoteMessage.getData().get("message"));
-
+        String title = remoteMessage.getData().get("title");
+        String message = remoteMessage.getData().get("message");
+        String sender_email = remoteMessage.getData().get("response_email");
         //Calling method to generate notification
-        sendNotification(remoteMessage.getData().get("message"));
+        sendNotification(title,message,sender_email);
         Log.d("response_email", remoteMessage.getData().get("response_email"));
     }
 
     //This method is only generating push notification
     //It is same as we did in earlier posts
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, IndexActivity.class);
+    private void sendNotification(String title, String message, String senderEmail) {
+        Intent intent = new Intent(this, SuccessActivity.class);
+        intent.putExtra(RESPONSE_EMAIL, senderEmail);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("New location request!")
-                .setContentText(messageBody)
+                .setContentTitle(title)
+                .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);

@@ -259,7 +259,7 @@ public class IndexActivity extends AppCompatActivity{
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
                     //Adding parameters to request
-                    params.put(KEY_EMAIL, email);
+                    params.put(Config.KEY_EMAIL, email);
 
                     //returning parameter
                     return params;
