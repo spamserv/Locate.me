@@ -46,34 +46,68 @@ public class IndexActivity extends AppCompatActivity{
     private static final String SEARCH_URL = "http://locate-me.azurewebsites.net/search.php";
 
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_REQUEST = "request_email";
     ListView lvUsers;
     ArrayList<User> myUsers = new ArrayList<User>();;
     UserAdapter myArrayAdapter;
     //Textview to show currently logged in user
     private TextView tvView;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkGooglePlayServiceVersion();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-        Integer resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode == ConnectionResult.SUCCESS) {
-        //Do what you want
-                } else {
-                    Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
-                    if (dialog != null) {
-        //This dialog will help the user update to the latest GooglePlayServices
-                        dialog.show();
-                    }
-                }
+
+        checkGooglePlayServiceVersion();
         init();
+        updateToken();
+    }
+
+    private void updateToken() {
+        //Creating a string request
+        SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        final String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
+        final String token = sharedPreferences.getString(Config.TOKEN_SHARED_PREF,"Not Available");
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.REGISTER_TOKEN_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Do nothing on response
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //You can handle error here if you want
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                //Adding parameters to request
+                params.put(KEY_EMAIL, email);
+                params.put(Config.KEY_TOKEN, token);
+
+                //returning parameter
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     private void init() {
         //Initializing textview
         tvView = (TextView) findViewById(R.id.tvView);
-        Log.d("Primjer","primjer-loga");
         //Fetching email from shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
@@ -86,10 +120,57 @@ public class IndexActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 User user = (User) myArrayAdapter.getItem(position);
-                Toast.makeText(IndexActivity.this, "You just sent a request to "+user.getEmail()+"!", Toast.LENGTH_LONG).show();
-
+                sendLocationRequest(user.getEmail());
             }
         });
+    }
+
+    private void sendLocationRequest(String email) {
+        SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        final String request_receiver_email = email;
+        final String request_sender_email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
+        final ProgressDialog pDialog = new ProgressDialog(this);
+
+        pDialog.setMessage("Sending a request...");
+        pDialog.show();
+        //Creating a string request
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.SEND_NOTIFICATION_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if(!response.equalsIgnoreCase(Config.FAILURE)) {
+                            Toast.makeText(IndexActivity.this, "You just sent a request to "+request_receiver_email+"!", Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                        }
+                        pDialog.hide();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //You can handle error here if you want
+                        Toast.makeText(IndexActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+
+                        pDialog.hide();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                //Adding parameters to request
+                params.put(Config.KEY_EMAIL, request_receiver_email);
+                params.put(KEY_REQUEST, request_sender_email);
+
+                //returning parameter
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
 
     //Logout function
@@ -142,15 +223,13 @@ public class IndexActivity extends AppCompatActivity{
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Searching...");
         pDialog.show();
-        Intent intent = getIntent();
-
 
         if (email == "") {
             Toast.makeText(IndexActivity.this, "You didn't enter any email.", Toast.LENGTH_LONG).show();
         } else {
 
             //Creating a string request
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.SEARCH_URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -163,7 +242,7 @@ public class IndexActivity extends AppCompatActivity{
                             }else{
                                 Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
                             }
-                                pDialog.hide();
+                            pDialog.hide();
 
                         }
                     },
@@ -226,6 +305,20 @@ public class IndexActivity extends AppCompatActivity{
             logout();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkGooglePlayServiceVersion() {
+        Integer resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+        if (resultCode == ConnectionResult.SUCCESS) {
+            //Do what you want
+        } else {
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+            if (dialog != null) {
+                //This dialog will help the user update to the latest GooglePlayServices
+                dialog.show();
+            }
+        }
     }
 
 }

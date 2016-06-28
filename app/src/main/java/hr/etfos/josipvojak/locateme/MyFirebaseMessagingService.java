@@ -17,16 +17,18 @@ import com.google.firebase.messaging.RemoteMessage;
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    private static final String RESPONSE_EMAIL = "email";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Displaying data in log
         //It is optional
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        Log.d(TAG, "Notification Message Body: " + remoteMessage.getData().get("message"));
 
         //Calling method to generate notification
-        sendNotification(remoteMessage.getNotification().getBody());
+        sendNotification(remoteMessage.getData().get("message"));
+        Log.d("response_email", remoteMessage.getData().get("response_email"));
     }
 
     //This method is only generating push notification
