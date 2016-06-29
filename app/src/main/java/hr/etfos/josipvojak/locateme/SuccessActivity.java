@@ -32,10 +32,7 @@ import java.util.Map;
 public class SuccessActivity extends AppCompatActivity {
 
     private static final int PERMISSION_LOCATION_REQUEST_CODE = 0;
-    public static final String KEY_LOCATION_RECEIVER_EMAIL = "location_receiver_email";
-    public static final String KEY_LOCATION_SENDER_EMAIL = "location_sender_email";
-    public static final String KEY_LATITUDE = "latitude";
-    public static final String KEY_LONGITUDE = "longitude";
+
     Location myLocation;
     LocationManager myLocationManager;
 
@@ -104,7 +101,7 @@ public class SuccessActivity extends AppCompatActivity {
         Log.d("4:",Double.toString(longitude));
 
         //Creating a string request
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.SEARCH_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CALLBACK_NOTIFICATION_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -127,10 +124,10 @@ public class SuccessActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 //Adding parameters to request
-                params.put(KEY_LOCATION_SENDER_EMAIL, location_sender_email);
-                params.put(KEY_LOCATION_RECEIVER_EMAIL, location_receiver_email);
-                params.put(KEY_LATITUDE, Double.toString(latitude));
-                params.put(KEY_LONGITUDE, Double.toString(longitude));
+                params.put(Constants.KEY_LOCATION_SENDER_EMAIL, location_sender_email);
+                params.put(Constants.KEY_LOCATION_RECEIVER_EMAIL, location_receiver_email);
+                params.put(Constants.KEY_LATITUDE, Double.toString(latitude));
+                params.put(Constants.KEY_LONGITUDE, Double.toString(longitude));
 
                 //returning parameter
                 return params;

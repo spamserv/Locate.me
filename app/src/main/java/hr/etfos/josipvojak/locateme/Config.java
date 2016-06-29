@@ -4,13 +4,9 @@ package hr.etfos.josipvojak.locateme;
  * Created by jvojak on 25.6.2016..
  */
 public class Config {
-    //URL to our login.php file
-    public static final String LOGIN_URL = "http://locate-me.azurewebsites.net/login.php";
-    public static final String REGISTER_TOKEN_URL = "http://locate-me.azurewebsites.net/register_token.php";
-    public static final String SEARCH_URL = "http://locate-me.azurewebsites.net/search.php";
-    public static final String SEND_NOTIFICATION_URL = "http://locate-me.azurewebsites.net/send_notification.php";
 
-    //Keys for email and password as defined in our $_POST['key'] in login.php
+
+    //Keys for email and password as defined in our $_POST['key']
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_TOKEN = "token";

@@ -3,7 +3,6 @@ package hr.etfos.josipvojak.locateme;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,10 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jvojak on 26.6.2016..
+ * Created by jvojak on 29.6.2016..
  */
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
-    private static final String TAG = "MyFirebaseIIDService";
+public class FirebaseInstanceIDService extends FirebaseInstanceIdService{
 
     @Override
     public void onTokenRefresh() {
@@ -31,7 +29,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
         //Displaying token on logcat
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        Log.d(Constants.KEY_TAG, "Refreshed token: " + refreshedToken);
         sendRegistrationToServer(refreshedToken);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -49,7 +47,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private void sendRegistrationToServer(String token) {
         final String new_token = token;
         //Creating a string request
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.REGISTER_TOKEN_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.REGISTER_TOKEN_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

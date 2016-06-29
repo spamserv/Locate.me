@@ -9,22 +9,20 @@ import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 /**
- * Created by jvojak on 26.6.2016..
+ * Created by jvojak on 29.6.2016..
  */
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private static final String TAG = "MyFirebaseMsgService";
-    private static final String RESPONSE_EMAIL = "email";
+public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService{
+
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Displaying data in log
         //It is optional
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getData().get("message"));
+        Log.d(Constants.KEY_TAG, "From: " + remoteMessage.getFrom());
+        Log.d(Constants.KEY_TAG, "Notification Message Body: " + remoteMessage.getData().get("message"));
         String title = remoteMessage.getData().get("title");
         String message = remoteMessage.getData().get("message");
         String sender_email = remoteMessage.getData().get("response_email");
@@ -37,7 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //It is same as we did in earlier posts
     private void sendNotification(String title, String message, String senderEmail) {
         Intent intent = new Intent(this, SuccessActivity.class);
-        intent.putExtra(RESPONSE_EMAIL, senderEmail);
+        intent.putExtra(Constants.KEY_RESPONSE_EMAIL, senderEmail);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,

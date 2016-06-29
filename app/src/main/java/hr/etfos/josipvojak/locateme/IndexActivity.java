@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,27 +29,17 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IndexActivity extends AppCompatActivity{
 
-    private static final String SEARCH_URL = "http://locate-me.azurewebsites.net/search.php";
+    private ListView lvUsers;
+    private ArrayList<User> myUsers = new ArrayList<User>();;
+    private UserAdapter myArrayAdapter;
 
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_REQUEST = "request_email";
-    ListView lvUsers;
-    ArrayList<User> myUsers = new ArrayList<User>();;
-    UserAdapter myArrayAdapter;
-    //Textview to show currently logged in user
     private TextView tvView;
 
     @Override
@@ -76,7 +65,7 @@ public class IndexActivity extends AppCompatActivity{
         final String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
         final String token = sharedPreferences.getString(Config.TOKEN_SHARED_PREF,"Not Available");
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.REGISTER_TOKEN_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.REGISTER_TOKEN_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -94,7 +83,7 @@ public class IndexActivity extends AppCompatActivity{
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 //Adding parameters to request
-                params.put(KEY_EMAIL, email);
+                params.put(Config.KEY_EMAIL, email);
                 params.put(Config.KEY_TOKEN, token);
 
                 //returning parameter
@@ -135,7 +124,7 @@ public class IndexActivity extends AppCompatActivity{
         pDialog.setMessage("Sending a request...");
         pDialog.show();
         //Creating a string request
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.SEND_NOTIFICATION_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.SEND_NOTIFICATION_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -162,7 +151,7 @@ public class IndexActivity extends AppCompatActivity{
                 Map<String, String> params = new HashMap<>();
                 //Adding parameters to request
                 params.put(Config.KEY_EMAIL, request_receiver_email);
-                params.put(KEY_REQUEST, request_sender_email);
+                params.put(Constants.KEY_REQUEST, request_sender_email);
 
                 //returning parameter
                 return params;
@@ -229,7 +218,7 @@ public class IndexActivity extends AppCompatActivity{
         } else {
 
             //Creating a string request
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.SEARCH_URL,
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.SEARCH_URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
