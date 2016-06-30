@@ -13,6 +13,7 @@ public class Constants {
 
     //Used as logger
     public static final String KEY_TAG = "MyFirebaseMsgService";
+
     //URLs
     public static final String LOGIN_URL = "http://locate-me.azurewebsites.net/login.php";
     public static final String REGISTER_TOKEN_URL = "http://locate-me.azurewebsites.net/register_token.php";

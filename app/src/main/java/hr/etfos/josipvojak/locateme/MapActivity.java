@@ -3,10 +3,15 @@ package hr.etfos.josipvojak.locateme;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 
-public class MapActivity extends AppCompatActivity {
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 
+public class MapActivity extends AppCompatActivity {
+    private GoogleMap googleMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -14,10 +19,16 @@ public class MapActivity extends AppCompatActivity {
 
         Intent startingIntent = getIntent();
         Bundle extras = startingIntent.getExtras();
-        if (extras.containsKey("email")){
+        if (extras.containsKey("email") && extras.containsKey("latitude") && extras.containsKey("longitude")){
             String email = extras.getString("email");
-            Toast.makeText(MapActivity.this, email+" wants your location!", Toast.LENGTH_LONG).show();
+
+            double latitude = Double.parseDouble(extras.getString("latitude"));
+            double longitude = Double.parseDouble(extras.getString("longitude"));
+
         }
+
+        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+
 
 
     }

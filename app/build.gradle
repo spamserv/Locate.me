@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
 }
 
 dependencies {
@@ -28,6 +31,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.0.0'
     compile 'com.google.firebase:firebase-messaging:9.0.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.google.android.gms:play-services-maps:9.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

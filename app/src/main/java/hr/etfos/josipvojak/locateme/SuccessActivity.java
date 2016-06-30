@@ -95,10 +95,6 @@ public class SuccessActivity extends AppCompatActivity {
     }
 
     private void sendCallbackNotification(final String location_sender_email, final String location_receiver_email, final double latitude, final double longitude) {
-        Log.d("1:",location_sender_email);
-        Log.d("2:",location_receiver_email);
-        Log.d("3:",Double.toString(latitude));
-        Log.d("4:",Double.toString(longitude));
 
         //Creating a string request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CALLBACK_NOTIFICATION_URL,
