@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -33,11 +34,11 @@ public class SuccessActivity extends AppCompatActivity {
 
     private static final int PERMISSION_LOCATION_REQUEST_CODE = 0;
 
-    Location myLocation;
-    LocationManager myLocationManager;
+    private Location myLocation;
+    private LocationManager myLocationManager;
 
-    String provider;
-    Criteria criteria;
+    private String provider, email, email_sender;
+    private Criteria criteria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,41 +59,71 @@ public class SuccessActivity extends AppCompatActivity {
 
         Intent startingIntent = getIntent();
         Bundle extras = startingIntent.getExtras();
-        if (extras.containsKey("email")) {
-            String email = extras.getString("email");
-            String email_sender = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
-            Toast.makeText(SuccessActivity.this, "You sent your location to " + email, Toast.LENGTH_LONG).show();
+        if (extras.containsKey(Config.KEY_EMAIL)) {
+            email = extras.getString(Config.KEY_EMAIL);
+            email_sender = sharedPreferences.getString(Config.EMAIL_SHARED_PREF, Constants.NOT_AVAILABLE);
 
-            if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                         PERMISSION_LOCATION_REQUEST_CODE);
 
-                myLocation = myLocationManager.getLastKnownLocation(provider);
-
-                // Obtaining location latitude and longitude
-                double latitude = myLocation.getLatitude();
-                double longitude = myLocation.getLongitude();
-
-                sendCallbackNotification(email_sender, email, latitude, longitude);
-
                 return;
             }
-            if ( Build.VERSION.SDK_INT >= 23 &&
-                    ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-             }
+            if (Build.VERSION.SDK_INT >= 23 &&
+                    ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
 
             myLocation = myLocationManager.getLastKnownLocation(provider);
+            myLocationManager.requestLocationUpdates(provider, 100, 1, myLL);
 
+        /*
             // Obtaining location latitude and longitude
             double latitude = myLocation.getLatitude();
             double longitude = myLocation.getLongitude();
 
-            sendCallbackNotification(email_sender, email, latitude, longitude);
+            sendCallbackNotification(email_sender, email, latitude, longitude);*/
         }
     }
+
+    LocationListener myLL = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            // Obtaining location latitude and longitude
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            sendCallbackNotification(email_sender, email, latitude, longitude);
+            if (ActivityCompat.checkSelfPermission(SuccessActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SuccessActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            Toast.makeText(SuccessActivity.this, Constants.SENDING_LOCATION + email, Toast.LENGTH_LONG).show();
+            myLocationManager.removeUpdates(myLL);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     private void sendCallbackNotification(final String location_sender_email, final String location_receiver_email, final double latitude, final double longitude) {
 
@@ -104,7 +135,7 @@ public class SuccessActivity extends AppCompatActivity {
                         if(!response.equalsIgnoreCase(Config.FAILURE)) {
                             // Do nothing
                         }else{
-                            Toast.makeText(SuccessActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SuccessActivity.this, Constants.INVALID_USER, Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -132,6 +163,4 @@ public class SuccessActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
-
-
 }
