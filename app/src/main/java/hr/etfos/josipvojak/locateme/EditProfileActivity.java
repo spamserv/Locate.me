@@ -2,8 +2,8 @@ package hr.etfos.josipvojak.locateme;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,12 +19,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static hr.etfos.josipvojak.locateme.R.color.locatePrimary;
 
 public class EditProfileActivity extends AppCompatActivity{
 
@@ -47,6 +44,16 @@ public class EditProfileActivity extends AppCompatActivity{
         etStatus = (EditText) findViewById(R.id.etStatus);
         cbNotifications = (CheckBox) findViewById(R.id.cbNotifications);
         btnSaveProfile = (Button) findViewById(R.id.btnSaveProfile);
+
+        btnSaveProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveProfile(v);
+            }
+        });
+
+        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(locatePrimary));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
     }
 
 
@@ -85,7 +92,6 @@ public class EditProfileActivity extends AppCompatActivity{
 
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         final String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF, Constants.NOT_AVAILABLE);
-        Log.d("MOJ EMAIL JE",email);
         //Creating a string request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.UPDATE_PROFILE_URL,
                 new Response.Listener<String>() {
@@ -93,7 +99,6 @@ public class EditProfileActivity extends AppCompatActivity{
                     public void onResponse(String response) {
                         if(!response.equalsIgnoreCase(Config.FAILURE)) {
                             Toast.makeText(EditProfileActivity.this, "Updated profile successfully!", Toast.LENGTH_LONG).show();
-                            Log.d("responsefromupdate",response.toString());
                         }else{
                             Toast.makeText(EditProfileActivity.this, "Could not update profile at this time.", Toast.LENGTH_LONG).show();
                         }

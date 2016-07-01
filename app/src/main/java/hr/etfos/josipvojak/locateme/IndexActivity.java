@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,12 +17,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,19 +31,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import static hr.etfos.josipvojak.locateme.R.color.colorPrimaryDark;
 import static hr.etfos.josipvojak.locateme.R.color.locatePrimary;
-import static hr.etfos.josipvojak.locateme.R.color.locateTextColor;
 
 public class IndexActivity extends AppCompatActivity{
 
@@ -67,8 +57,6 @@ public class IndexActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-
-        Window window = this.getWindow();
 
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(locatePrimary));
         getSupportActionBar().setBackgroundDrawable(colorDrawable);
@@ -338,7 +326,6 @@ public class IndexActivity extends AppCompatActivity{
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("ERROR",error.toString());
                     pDialog.hide();
                 }
             }) {

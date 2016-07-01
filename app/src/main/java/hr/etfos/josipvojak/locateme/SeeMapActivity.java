@@ -71,7 +71,6 @@ public class SeeMapActivity extends Activity implements OnMapReadyCallback {
                             JSONArray jsonArray = response.getJSONArray("res");
                             for(int i = 0 ; i < jsonArray.length(); i++){
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
-                                Log.d("BALLOTELLI",jsonObj.toString());
                                 if(!jsonObj.has("failure")) {
                                     String email = jsonObj.getString(Constants.KEY_RESPONSE_EMAIL);
                                     String latitude = jsonObj.getString(Constants.KEY_LATITUDE);
@@ -98,7 +97,6 @@ public class SeeMapActivity extends Activity implements OnMapReadyCallback {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ERROR",error.toString());
                 pDialog.hide();
             }
         }) {

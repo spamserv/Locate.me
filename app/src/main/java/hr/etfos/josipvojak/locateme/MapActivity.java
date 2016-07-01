@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hr.etfos.josipvojak.locateme.R.color.locatePrimary;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
     private GoogleMap mMap;
     private double dest_long, dest_lat, source_lat, source_long;
@@ -46,6 +49,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(locatePrimary));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
         findYourLocation();
 

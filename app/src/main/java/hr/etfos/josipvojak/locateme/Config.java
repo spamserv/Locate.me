@@ -5,7 +5,6 @@ package hr.etfos.josipvojak.locateme;
  */
 public class Config {
 
-
     //Keys for email and password as defined in our $_POST['key']
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
@@ -20,7 +19,6 @@ public class Config {
     public static final String SHARED_PREF_NAME = "locatemesession";
 
     //This would be used to store the session of current logged in user
-    public static final String ID_SHARED_PREF = "id";
     public static final String EMAIL_SHARED_PREF = "email";
     public static final String TOKEN_SHARED_PREF = "token";
     public static final String USERNAME_SHARED_PREF = "username";

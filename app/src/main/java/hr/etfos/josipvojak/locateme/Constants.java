@@ -4,6 +4,7 @@ package hr.etfos.josipvojak.locateme;
  * Created by jvojak on 29.6.2016..
  */
 public class Constants {
+
     public static final String KEY_LOCATION_RECEIVER_EMAIL = "location_receiver_email";
     public static final String KEY_LOCATION_SENDER_EMAIL = "location_sender_email";
     public static final String KEY_LATITUDE = "latitude";
@@ -32,9 +33,6 @@ public class Constants {
     public static final String SENDING_LOCATION = "You sent your location to ";
     public static final String INVALID_USER = "User with that email does not exist.";
     public static final String NO_EMAIL = "You didn't enter any email.";
-
-    public static final String API_KEY = "AIzaSyD6al_BVPd_x32eG7pjlWMJUgywqz9nFh0";
-
     public static final String GETTING_ROUTE = "Getting route...";
     public static final String GETTING_LOCATION = "Getting location";
     public static final String WAIT = "Please wait...";

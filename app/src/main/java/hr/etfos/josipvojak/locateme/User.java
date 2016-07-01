@@ -1,6 +1,5 @@
 package hr.etfos.josipvojak.locateme;
 
-import java.util.Date;
 
 /**
  * Created by jvojak on 26.6.2016..
