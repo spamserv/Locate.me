@@ -29,5 +29,6 @@ public class Constants {
     public static final String API_KEY = "AIzaSyD6al_BVPd_x32eG7pjlWMJUgywqz9nFh0";
 
     public static final String GETTING_ROUTE = "Getting route...";
+    public static final String GETTING_LOCATION = "Getting location";
     public static final String WAIT = "Please wait...";
 }

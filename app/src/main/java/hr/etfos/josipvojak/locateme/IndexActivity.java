@@ -278,6 +278,7 @@ public class IndexActivity extends AppCompatActivity{
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
                 search(query);
+                searchView.clearFocus();
                 return true;
             }
         };

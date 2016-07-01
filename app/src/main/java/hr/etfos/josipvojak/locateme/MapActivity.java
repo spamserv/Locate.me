@@ -49,12 +49,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
     private GoogleMap mMap;
-    private GoogleApiClient googleApiClient;
     private double dest_long, dest_lat, source_lat, source_long;
     private String email, provider;
-    private Location myLocation;
     private LocationManager myLocationManager;
     private Criteria criteria;
 
@@ -99,8 +97,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        myLocation = myLocationManager.getLastKnownLocation(provider);
-        myLocationManager.requestLocationUpdates(provider, 100, 1, myLL);
+        myLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
+        myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
     }
 
     @Override
@@ -200,7 +198,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         LatLng from = new LatLng(source_lat, source_long);
         LatLng to = new LatLng(dest_lat, dest_lat);
         //Displaying the distance
-        Toast.makeText(this, String.valueOf(result + " Meters"), Toast.LENGTH_SHORT).show();
         Log.d("result_to", to.toString());
         Log.d("result_from", from.toString());
         Log.d("result_result", result);
@@ -258,41 +255,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return poly;
     }
 
-    LocationListener myLL = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            source_lat = location.getLatitude();
-            source_long = location.getLongitude();
+    @Override
+    public void onLocationChanged(Location location) {
+        source_lat = location.getLatitude();
+        source_long = location.getLongitude();
 
-            if (mMap != null) {
-                getDirection();
-                if (ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                myLocationManager.removeUpdates(myLL);
+        if (mMap != null) {
+            getDirection();
+            if (ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
             }
+            myLocationManager.removeUpdates(this);
         }
+    }
 
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-        }
+    }
 
-        @Override
-        public void onProviderEnabled(String provider) {
+    @Override
+    public void onProviderEnabled(String provider) {
 
-        }
+    }
 
-        @Override
-        public void onProviderDisabled(String provider) {
+    @Override
+    public void onProviderDisabled(String provider) {
 
-        }
-    };
+    }
 }
