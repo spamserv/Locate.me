@@ -7,14 +7,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,14 +30,24 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static hr.etfos.josipvojak.locateme.R.color.colorPrimaryDark;
+import static hr.etfos.josipvojak.locateme.R.color.locatePrimary;
+import static hr.etfos.josipvojak.locateme.R.color.locateTextColor;
 
 public class IndexActivity extends AppCompatActivity{
 
@@ -40,7 +55,7 @@ public class IndexActivity extends AppCompatActivity{
     private ArrayList<User> myUsers = new ArrayList<User>();;
     private UserAdapter myArrayAdapter;
 
-    private TextView tvView;
+    private TextView tvView, tvProfilePic;
 
     @Override
     protected void onResume() {
@@ -52,6 +67,11 @@ public class IndexActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+
+        Window window = this.getWindow();
+
+        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(locatePrimary));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
 
         checkGooglePlayServiceVersion();
         init();
@@ -97,6 +117,7 @@ public class IndexActivity extends AppCompatActivity{
     private void init() {
         //Initializing textview
         tvView = (TextView) findViewById(R.id.tvView);
+        tvProfilePic = (TextView) findViewById(R.id.tvProfilePic);
         //Fetching email from shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,Constants.NOT_AVAILABLE);
@@ -112,16 +133,17 @@ public class IndexActivity extends AppCompatActivity{
                 sendLocationRequest(user.getEmail());
             }
         });
+
     }
 
     private void sendLocationRequest(String email) {
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         final String request_receiver_email = email;
-        final String request_sender_email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
+        final String request_sender_email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,Constants.NOT_AVAILABLE);
         final ProgressDialog pDialog = new ProgressDialog(this);
 
-        pDialog.setMessage("Sending a request...");
+        pDialog.setMessage(Constants.SENDING_REQUEST);
         pDialog.show();
         //Creating a string request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.SEND_NOTIFICATION_URL,
@@ -131,10 +153,9 @@ public class IndexActivity extends AppCompatActivity{
                         if(!response.equalsIgnoreCase(Config.FAILURE)) {
                             Toast.makeText(IndexActivity.this, "You just sent a request to "+request_receiver_email+"!", Toast.LENGTH_LONG).show();
                         }else{
-                            Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                            Toast.makeText(IndexActivity.this, Constants.INVALID_USER, Toast.LENGTH_LONG).show();
                         }
                         pDialog.hide();
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -166,7 +187,7 @@ public class IndexActivity extends AppCompatActivity{
     private void logout(){
         //Creating an alert dialog to confirm logout
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Are you sure you want to logout?");
+        alertDialogBuilder.setMessage(Constants.LOGOUT_QUESTION);
         alertDialogBuilder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -228,7 +249,7 @@ public class IndexActivity extends AppCompatActivity{
                             myArrayAdapter = new UserAdapter(IndexActivity.this, myUsers);
                             lvUsers.setAdapter(myArrayAdapter);
                         }else{
-                            Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                            Toast.makeText(IndexActivity.this, Constants.INVALID_USER, Toast.LENGTH_LONG).show();
                         }
                         pDialog.hide();
 
@@ -261,52 +282,70 @@ public class IndexActivity extends AppCompatActivity{
     private void search(String query) {
         final String email = query;
         final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Searching...");
+        pDialog.setMessage(Constants.SEARCHING);
         pDialog.show();
 
-        if (email == "") {
-            Toast.makeText(IndexActivity.this, "You didn't enter any email.", Toast.LENGTH_LONG).show();
+        if (email.equalsIgnoreCase("")) {
+            Toast.makeText(IndexActivity.this, Constants.NO_EMAIL, Toast.LENGTH_LONG).show();
         } else {
 
-            //Creating a string request
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.SEARCH_URL,
-                    new Response.Listener<String>() {
+            RequestQueue queue = Volley.newRequestQueue(this);
+            Map<String, String> data = new HashMap();
+            data.put("email", email);
+
+            JSONObject parameters = new JSONObject(data);
+
+            JsonObjectRequest Req = new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.SEARCH_URL,
+                    parameters,
+                    new Response.Listener<JSONObject>() {
+
                         @Override
-                        public void onResponse(String response) {
-                            if(!response.equalsIgnoreCase(Config.FAILURE)) {
-                                String email = response.toString();
-                                User user = new User(email);
-                                myUsers.add(user);
-                                myArrayAdapter = new UserAdapter(IndexActivity.this, myUsers);
-                                lvUsers.setAdapter(myArrayAdapter);
-                            }else{
-                                Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray jsonArray = response.getJSONArray("res");
+                                for(int i = 0 ; i < jsonArray.length(); i++){
+                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
+                                    if(!jsonObj.has("failure")) {
+                                        String email = jsonObj.getString(Constants.KEY_RESPONSE_EMAIL);
+                                        String username = jsonObj.getString(Constants.KEY_USERNAME);
+                                        String status = jsonObj.getString(Constants.KEY_STATUS);
+                                        String last_online = jsonObj.getString(Constants.KEY_LAST_ONLINE);
+                                        if (username.equalsIgnoreCase("null")) {
+                                            username = "Not set.";
+                                        }
+
+                                        if (status.equalsIgnoreCase("null")) {
+                                            status = "Not status yet.";
+                                        }
+
+                                        User user = new User(email, username, status, last_online);
+                                        myUsers.add(user);
+                                        myArrayAdapter = new UserAdapter(IndexActivity.this, myUsers);
+                                        lvUsers.setAdapter(myArrayAdapter);
+                                    } else {
+                                        Toast.makeText(IndexActivity.this,Constants.INVALID_USER,Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                             pDialog.hide();
-
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //You can handle error here if you want
-                            Toast.makeText(IndexActivity.this, error.toString(), Toast.LENGTH_LONG).show();
 
-                            pDialog.hide();
-                        }
-                    }) {
+                    }, new Response.ErrorListener() {
+
                 @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<>();
-                    //Adding parameters to request
-                    params.put(Config.KEY_EMAIL, email);
-
-                    //returning parameter
-                    return params;
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("ERROR",error.toString());
+                    pDialog.hide();
                 }
+            }) {
+
             };
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            requestQueue.add(stringRequest);
+
+            queue.add(Req);
         }
     }
 
@@ -346,6 +385,9 @@ public class IndexActivity extends AppCompatActivity{
             logout();
         } else if(id == R.id.menuEditProfile) {
             Intent intent = new Intent(IndexActivity.this, EditProfileActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menuSeeMap) {
+            Intent intent = new Intent(IndexActivity.this, SeeMapActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

@@ -1,5 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorBackground"
+    android:background="@color/locateLightPrimary"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
@@ -28,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
+                android:textColor="@color/locateTextColor"
                 android:hint="Email" />
         </android.support.design.widget.TextInputLayout>
 
@@ -39,6 +40,7 @@
             <EditText android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/locateTextColor"
                 android:inputType="textPassword"
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
@@ -47,8 +49,8 @@
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#83001F"
-            android:textColor="@color/colorAccent"
+            android:background="@color/locatePrimary"
+            android:textColor="@color/locateTextColor"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
@@ -61,7 +63,7 @@
             android:text="No account yet? Create one"
             android:gravity="center"
             android:textSize="16dip"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/locateTextColor"/>
 
     </LinearLayout>
 </ScrollView>

@@ -9,26 +9,19 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Window;
-import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -38,16 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
     private GoogleMap mMap;
@@ -128,15 +113,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(requested_location, 13));
 
         mMap.addMarker(new MarkerOptions()
-                .title("NIJE SIDNI")
-                .snippet("The most populous city in Australia.")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location))
+                .title(email)
+                .snippet(Constants.MARKER_MESSAGE)
                 .position(requested_location));
-
-        mMap.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(source_location));
-
     }
 
     public String makeURL(double sourcelat, double sourcelog, double destlat, double destlog) {
@@ -170,7 +150,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void onResponse(String response) {
                         pDialog.dismiss();
-                        Log.d("RESPONSE", response.toString());
                         //Calling the method drawPath to draw the path
                         drawPath(response);
                     }
@@ -193,9 +172,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         LatLng from = new LatLng(source_lat, source_long);
         LatLng to = new LatLng(dest_lat, dest_lat);
         //Displaying the distance
-        Log.d("result_to", to.toString());
-        Log.d("result_from", from.toString());
-        Log.d("result_result", result);
 
         try {
             //Parsing json

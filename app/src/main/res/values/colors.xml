@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#147fbb</color>
+
+    <color name="locatePrimary">#8BC34A</color>
+    <color name="locateTextColor">#212121</color>
+    <color name="locateLightPrimary">#DCEDC8</color>
+    <color name="locateDividerPrimary">#B6B6B6</color>
+    <color name="locateAccent">#FF5722</color>
 </resources>

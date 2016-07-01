@@ -5,7 +5,8 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/locateLightPrimary">
 
 
     <TextView
@@ -13,12 +14,20 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/tvView" />
+        android:id="@+id/tvView"
+        android:textColor="@color/locateTextColor"/>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/locateDividerPrimary"
+        android:textAlignment="center"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lvUsers">
+        android:id="@+id/lvUsers"
+        android:paddingTop="20dp">
 
     </ListView>
 
