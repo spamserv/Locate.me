@@ -62,8 +62,8 @@ public class IndexActivity extends AppCompatActivity{
         //Creating a string request
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        final String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
-        final String token = sharedPreferences.getString(Config.TOKEN_SHARED_PREF,"Not Available");
+        final String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,Constants.NOT_AVAILABLE);
+        final String token = sharedPreferences.getString(Config.TOKEN_SHARED_PREF,Constants.NOT_AVAILABLE);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.REGISTER_TOKEN_URL,
                 new Response.Listener<String>() {
@@ -99,7 +99,7 @@ public class IndexActivity extends AppCompatActivity{
         tvView = (TextView) findViewById(R.id.tvView);
         //Fetching email from shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
+        String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF,Constants.NOT_AVAILABLE);
 
         //Showing the current logged in email to textview
         tvView.setText("Current User: " + email);
@@ -179,9 +179,14 @@ public class IndexActivity extends AppCompatActivity{
 
                         //Puting the value false for loggedin
                         editor.putBoolean(Config.LOGGEDIN_SHARED_PREF, false);
+                        String email = preferences.getString(Config.EMAIL_SHARED_PREF,"Not Available");
+                        deleteTokenFromDatabase(email);
 
                         //Putting blank value to email
                         editor.putString(Config.EMAIL_SHARED_PREF, "");
+                        editor.putString(Config.USERNAME_SHARED_PREF, "");
+                        editor.putString(Config.STATUS_SHARED_PREF, "");
+                        editor.putString(Config.CHECKED_SHARED_PREF, "");
 
                         //Saving the sharedpreferences
                         editor.commit();
@@ -204,6 +209,52 @@ public class IndexActivity extends AppCompatActivity{
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+    }
+
+    private void deleteTokenFromDatabase(final String email) {
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Logging out...");
+        pDialog.show();
+
+        //Creating a string request
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.LOGOUT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if(!response.equalsIgnoreCase(Config.FAILURE)) {
+                            String email = response.toString();
+                            User user = new User(email);
+                            myUsers.add(user);
+                            myArrayAdapter = new UserAdapter(IndexActivity.this, myUsers);
+                            lvUsers.setAdapter(myArrayAdapter);
+                        }else{
+                            Toast.makeText(IndexActivity.this, "User with that email does not exist", Toast.LENGTH_LONG).show();
+                        }
+                        pDialog.hide();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //You can handle error here if you want
+                        Toast.makeText(IndexActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+
+                        pDialog.hide();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                //Adding parameters to request
+                params.put(Config.KEY_EMAIL, email);
+
+                //returning parameter
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 
@@ -293,6 +344,9 @@ public class IndexActivity extends AppCompatActivity{
         if (id == R.id.menuLogout) {
             //calling logout method when the logout button is clicked
             logout();
+        } else if(id == R.id.menuEditProfile) {
+            Intent intent = new Intent(IndexActivity.this, EditProfileActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

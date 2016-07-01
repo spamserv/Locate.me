@@ -23,6 +23,9 @@ public class Config {
     public static final String ID_SHARED_PREF = "id";
     public static final String EMAIL_SHARED_PREF = "email";
     public static final String TOKEN_SHARED_PREF = "token";
+    public static final String USERNAME_SHARED_PREF = "username";
+    public static final String STATUS_SHARED_PREF = "status";
+    public static final String CHECKED_SHARED_PREF = "checked";
 
     //We will use this to store the boolean in sharedpreference to track user is loggedin or not
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";

@@ -114,11 +114,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             source_location = new LatLng(source_lat, source_long);
         }
 
-        Log.d("source_lat", Double.toString(source_lat));
-        Log.d("source_long", Double.toString(source_long));
-        Log.d("dest_lat", Double.toString(dest_lat));
-        Log.d("dest_long", Double.toString(dest_long));
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions

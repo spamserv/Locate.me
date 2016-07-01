@@ -20,7 +20,9 @@ public class Constants {
     public static final String SEARCH_URL = "http://locate-me.azurewebsites.net/search.php";
     public static final String SEND_NOTIFICATION_URL = "http://locate-me.azurewebsites.net/send_notification.php";
     public static final String CALLBACK_NOTIFICATION_URL = "http://locate-me.azurewebsites.net/callback_notification.php";
-
+    public static final String UPDATE_PROFILE_URL = "http://locate-me.azurewebsites.net/update_profile.php";
+    public static final String GET_PROFILE_URL = "http://locate-me.azurewebsites.net/get_profile.php";
+    public static final String LOGOUT_URL  = "http://locate-me.azurewebsites.net/logout.php";
     //Constants
     public static final String NOT_AVAILABLE = "Not Available";
     public static final String SENDING_LOCATION = "You sent your location to ";
@@ -31,4 +33,5 @@ public class Constants {
     public static final String GETTING_ROUTE = "Getting route...";
     public static final String GETTING_LOCATION = "Getting location";
     public static final String WAIT = "Please wait...";
+
 }

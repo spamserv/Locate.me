@@ -47,7 +47,7 @@
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="#83001F"
             android:textColor="@color/colorAccent"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
@@ -60,7 +60,8 @@
             android:layout_marginBottom="24dp"
             android:text="No account yet? Create one"
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="16dip"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
 </ScrollView>
