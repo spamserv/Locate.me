@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText etRepeatPassword;
 
     private Button btnRegister;
+    private TextView tvLinkLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         etRepeatPassword = (EditText) findViewById(R.id.etRepeatedPassword);
         etEmail= (EditText) findViewById(R.id.etEmail);
 
+        tvLinkLogin = (TextView) findViewById(R.id.tvLinkLogin);
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(this);
+        tvLinkLogin.setOnClickListener(this);
     }
 
     private void registerUser(){
@@ -87,6 +91,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if(v == btnRegister){
             registerUser();
+        } else if (v == tvLinkLogin) {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
     }
 

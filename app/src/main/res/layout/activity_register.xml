@@ -14,7 +14,7 @@
         android:paddingRight="24dp">
 
         <ImageView
-            android:background="@drawable/logo1"
+            android:background="@drawable/logo"
             android:layout_gravity="center_horizontal"
             android:layout_width="200dp"
             android:layout_height="150dp" />
@@ -57,7 +57,7 @@
                 android:textColor="@color/locateTextColor"
                 android:password="true"
                 android:inputType="textPassword"
-                android:hint="Password"
+                android:hint="Repeat Password"
                 android:id="@+id/etRepeatedPassword" />
         </android.support.design.widget.TextInputLayout>
 
@@ -72,7 +72,7 @@
             android:padding="12dp"
             android:id="@+id/btnRegister" />
 
-        <TextView android:id="@+id/tvLinkSignup"
+        <TextView android:id="@+id/tvLinkLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"

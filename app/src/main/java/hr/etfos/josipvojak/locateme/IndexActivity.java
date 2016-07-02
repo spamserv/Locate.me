@@ -141,7 +141,7 @@ public class IndexActivity extends AppCompatActivity{
                         if(!response.equalsIgnoreCase(Config.FAILURE)) {
                             Toast.makeText(IndexActivity.this, "You just sent a request to "+request_receiver_email+"!", Toast.LENGTH_LONG).show();
                         }else{
-                            Toast.makeText(IndexActivity.this, Constants.INVALID_USER, Toast.LENGTH_LONG).show();
+                            Toast.makeText(IndexActivity.this, Constants.NO_NOTIFICATIONS, Toast.LENGTH_LONG).show();
                         }
                         pDialog.hide();
                     }
@@ -305,7 +305,7 @@ public class IndexActivity extends AppCompatActivity{
                                         }
 
                                         if (status.equalsIgnoreCase("null")) {
-                                            status = "Not status yet.";
+                                            status = "No status yet.";
                                         }
 
                                         User user = new User(email, username, status, last_online);

@@ -32,6 +32,7 @@ public class Constants {
     public static final String NOT_AVAILABLE = "Not Available";
     public static final String SENDING_LOCATION = "You sent your location to ";
     public static final String INVALID_USER = "User with that email does not exist.";
+    public static final String NO_NOTIFICATIONS = "User does not want to receive notifications.";
     public static final String NO_EMAIL = "You didn't enter any email.";
     public static final String GETTING_ROUTE = "Getting route...";
     public static final String GETTING_LOCATION = "Getting location";
